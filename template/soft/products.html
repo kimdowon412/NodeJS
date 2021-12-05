@@ -1,0 +1,22 @@
+{% set title = "관리자 리스트" %}
+{% extends "soft/main.html" %}
+
+{% block content %} 
+ <table class="table table-bordered table-hover">
+    <tr>
+        <th>제목</th>
+        <th>작성일</th>
+        <th>삭제</th>
+    </tr>
+    <tr>
+        <th>제품 이름</th>
+        <th>2021-11-16</th>
+        <td>
+            <a href="#" class="btn btn-danger">삭제</a>
+        </td>
+    </tr>
+ </table>
+ 
+{% endblock%}
+
+{% block button%}<a href="#" class="btn btn-success">성공</a> {%endblock%}
