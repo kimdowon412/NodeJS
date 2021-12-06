@@ -1,7 +1,19 @@
+const models = require('../../models');
+const Products = require('../../models/Products');
+
 exports.get_products = ( _ , res) => {
-    res.render( 'admin/products.html' , 
-        { message : "hello" } // message 란 변수를 템플릿으로 내보낸다.
-    );
+    // res.render( 'admin/products.html' , 
+    //     { message : "hello" } // message 란 변수를 템플릿으로 내보낸다.
+    // );
+
+    // SELECT * FROM Products;
+    models.Products.findAll({
+
+    }).then((products) => {
+        res.render('admin/products.html', {products : products})
+    })
+
+
 }
 
 exports.get_products_write = ( _ , res) => {
@@ -9,5 +21,47 @@ exports.get_products_write = ( _ , res) => {
 }
 
 exports.post_products_write = ( req , res ) => {
-    res.send(req.body);
+    // res.send(req.body);
+    
+    models.Products.create(req.body)
+    .then(()=> {
+        res.redirect('/admin/products')
+    })
+}
+
+exports.get_products_detail = (req, res) => {
+     models.Products.findByPk(req.params.id)
+     .then((product)=>{
+         res.render('admin/detail.html', {product})
+     })
+
+   // models.Products.findByPk(req.params.id)
+    //.then((product)=>{
+      //  res.render('admin/write.html', {product})
+    //})
+}
+
+exports.post_products_detail = (req, res) => {
+    // UPDATE 테이블이름 SET 컬럼='데이터' WHERE 조건
+    models.Products.update(
+        // SET 부분
+        req.body , 
+        {
+        // WHERE 부분
+            where : {id: req.params.id}
+        }
+    ).then(() => {
+        res.redirect('/admin/products')
+    })
+    
+
+
+}
+
+exports.get_products_delete = (req, res) => {
+    models.Products.destroy({
+        where : {id: req.params.id}
+    }).then(() => {
+        res.redirect('/admin/products')
+    })
 }

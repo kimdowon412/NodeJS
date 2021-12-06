@@ -1,8 +1,7 @@
 const express = require('express');
 const nunjucks = require('nunjucks');
 const logger = require('morgan');
-const bodyParser = require('body-parser');
-
+const db = require('./models')
 
 class App {
 
@@ -14,6 +13,9 @@ class App {
 
         // 미들웨어 셋팅
         this.setMiddleWare();
+
+        // DB connection
+        this.dbConnection()
 
         // 정적 디렉토리 추가
         this.setStatic();
@@ -33,13 +35,27 @@ class App {
 
     }
 
+    dbConnection() {
+        db.sequelize.authenticate()
+        .then(()=> {
+            console.log('Connection Success!!')
+        })
+        .then(()=> {
+            console.log('DB Sync complete')
+            return db.sequelize.sync() // ORM 문서 동기화
+        })
+        .catch(err=> {
+            console.log('Unable to connect to the database',err)
+        })
+    }
+
 
     setMiddleWare (){
         
         // 미들웨어 셋팅
         this.app.use(logger('dev'));
-        this.app.use(bodyParser.json());
-        this.app.use(bodyParser.urlencoded({ extended: false }));
+        this.app.use(express.json());
+        this.app.use(express.urlencoded({ extended: false }));
 
     }
 
